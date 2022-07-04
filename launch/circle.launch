@@ -1,0 +1,6 @@
+<launch>
+    <node pkg="spot_test" type="circle.py" name="circle_walk" output="screen">
+        <param name="radius" type="double" value="2.0"/>
+        <param name="speed" type="double" value="0.5"/>
+    </node>
+</launch>
