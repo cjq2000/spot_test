@@ -12,13 +12,26 @@ class lemniscate:
         #Start ROS node
         rospy.init()
 
-        #Start Publisher and Subscriber to /cmd_vel and /odom
-        self.odom_sub = rospy.Subscriber('/spot/odom', Pose, odom_callback, queue_size=1)
-        self.move_pub = rospy.Publisher('/spot/cmd_vel', Twist, queue_size=1)
+        self.claim = rospy.ServiceProxy('/spot/claim', Trigger)
+        self.power_on = rospy.ServiceProxy('spot/power_on', Trigger)
+        self.stand = rospy.ServiceProxy('spot/stand', Trigger)
 
+        rospy.wait_for_service('/spot/claim')
+        rospy.wait_for_service('/spot/power_on')
+        rospy.wait_for_service('/spot/stand')
+
+        try:
+            rospy.loginfo(self.claim())
+            rospy.loginfo(self.power_on())
+            rospy.loginfo(self.stand())
+
+        except:
+            print("Service failed: %s"%e)
+        
         #initialise variables
         self.radius = rospy.get_param(radius)
         self.speed = rospy.get_param(speed)
+        self.ang_vel = rospy.get_param(ang_vel)
         self.turn = False
         self.completed_segs = 0
         self.tol = 0.5
@@ -27,6 +40,12 @@ class lemniscate:
         self.side_start = Pose()
         self.move_cmd = Twist()
         self.move_cmd.linear.x = self.speed
+
+        #Start Publisher and Subscriber to /cmd_vel and /odom
+        check = raw_input("Start lemniscate test? y or n")
+        if str(check) == "y":
+            self.odom_sub = rospy.Subscriber('/spot/odom', Pose, odom_callback, queue_size=1)
+            self.move_pub = rospy.Publisher('/spot/cmd_vel', Twist, queue_size=1)
 
     
     def odom_callback(self, msg):
@@ -75,8 +94,7 @@ class lemniscate:
                 self.move_cmd.angular.z = 0
 
         #Publish move_cmd
-        if not rospy.is_shutdown():
-            self.move_pub.pub(self.move_cmd)
+        self.move_pub.pub(self.move_cmd)
 
 if __name__ == "__main__":
     move_lemon = lemniscate()

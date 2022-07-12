@@ -2,5 +2,6 @@
     <node pkg="spot_test" type="leminscate.py" name="lemniscate_walk" output="screen">
         <param name="radius" type="double" value="2.0"/>
         <param name="speed" type="double" value="0.5"/>
+        <param name="ang_vel" type="double" value="1.0"/>
     </node>
 </launch>

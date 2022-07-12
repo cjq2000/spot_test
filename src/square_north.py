@@ -9,9 +9,22 @@ class Move:
         #Start ROS node
         rospy.init()
 
-        #Start Publisher and Subscriber to /cmd_vel and /odom
-        self.odom_sub = rospy.Subscriber('/spot/odom', Pose, odom_callback, queue_size=1)
-        self.move_pub = rospy.Publisher('/spot/cmd_vel', Twist, queue_size=1)
+        #Claim control of spottherobot and stand
+        self.claim = rospy.ServiceProxy('/spot/claim', Trigger)
+        self.power_on = rospy.ServiceProxy('spot/power_on', Trigger)
+        self.stand = rospy.ServiceProxy('spot/stand', Trigger)
+
+        rospy.wait_for_service('/spot/claim')
+        rospy.wait_for_service('/spot/power_on')
+        rospy.wait_for_service('/spot/stand')
+
+        try:
+            rospy.loginfo(self.claim())
+            rospy.loginfo(self.power_on())
+            rospy.loginfo(self.stand())
+
+        except:
+            print("Service failed: %s"%e)
 
         #initialise variables
         self.side = rospy.get_param(side)
@@ -23,6 +36,12 @@ class Move:
         self.side_start = Pose()
         self.move_cmd = Twist()
         self.move_cmd.linear.x = self.speed
+
+        #Start Publisher and Subscriber to /cmd_vel and /odom
+        check = raw_input("Start square test? y or n")
+        if str(check) == "y":
+            self.odom_sub = rospy.Subscriber('/spot/odom', Pose, odom_callback, queue_size=1)
+            self.move_pub = rospy.Publisher('/spot/cmd_vel', Twist, queue_size=1)
         
 
     def odom_callback(self, msg):

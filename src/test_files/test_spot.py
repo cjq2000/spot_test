@@ -29,7 +29,7 @@ class Move:
 
         #Start Publisher and Subscriber to /cmd_vel and /odom
         self.odom_sub = rospy.Subscriber('/spot/odom', Pose, odom_callback, queue_size=1)
-        self.move_pub = rospy.Publisher('/spot/cmd_vel', Twist, queue_size=1)
+        self.move_pub = rospy.Publisher('/cmd_vel', Twist, queue_size=1)
 
         #initialise variables
         self.side = rospy.get_param(side)
