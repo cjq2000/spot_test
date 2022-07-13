@@ -24,7 +24,7 @@ class circle_walk:
         except:
             print("Service failed: %s"%e)
 
-        check = raw_input("Start square test? y or n")
+        check = raw_input("Start circle test? y or n")
         
 
         radius = rospy.get_param("~radius")
@@ -37,9 +37,9 @@ class circle_walk:
         if str(check) == "y":
             self.movement = rospy.Publisher('/cmd_vel', Twist, queue_size=1)
 
-        while not rospy.is_shutdown():
-            self.movement.publish(self.move_cmd)
-            rospy.sleep(0.2)
+            while not rospy.is_shutdown():
+                self.movement.publish(self.move_cmd)
+                rospy.sleep(0.2)
 
 if __name__ == '__main__':
     walk = circle_walk()

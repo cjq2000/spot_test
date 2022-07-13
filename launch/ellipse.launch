@@ -1,6 +1,7 @@
 <launch>
     <node pkg="spot_test" type="square.py" name="square_walk" output="screen">
         <param name="side" type="double" value="5.0"/>
+        <param name="radius" type="double" value="5.0"/>
         <param name="speed" type="double" value="0.5"/>
         <param name="angular_vel" type="double" value="1.0"/>
         <param name="reps" type="int" value="3"/>

@@ -31,6 +31,7 @@ class Move:
         #initialise variables
         self.odom_set = False
         self.side = rospy.get_param(side)
+        self.radius = rospy.get_param(radius)
         self.speed = rospy.get_param(speed)
         self.ang_vel = rospy.get_param(angular_vel)
         self.reps = rospy.get_param(reps)
@@ -60,7 +61,7 @@ class Move:
         if self.comp_reps < self.reps:
 
             #Check square is not complete
-            if self.completed_sides < 4:
+            if self.completed_sides < 2:
             
                 #Check if the side needs to be walked
                 if self.turn == False:
@@ -71,21 +72,19 @@ class Move:
                     if dist >= self.side:
                         self.turn = True
                         #Change move_cmd to turn
-                        self.move_cmd.linear.x = 0
-                        self.move_cmd.angular.z = self.ang_vel
+                        self.move_cmd.linear.x = self.speed
+                        self.move_cmd.angular.z = self.speed/self.radius
                         #Update start of side position
                         self.sidestart = msg
                         
                 #Check if robot is turning
                 elif self.turn == True:
-                    #Check if the target angle needs to be set
                     if self.target_set == False:
-                        #Set target angle to 0.5 more, modulo 2 and translate by -1 (spot angular pose is between -1 and 1)
-                        self.target = ((self.sidestart.angular.z + 0.5 )%2) - 1
+                        #Set target angle to 1 more, modulo 2 and translate by -1 (spot angular pose is between -1 and 1)
+                        self.target = ((self.sidestart.angular.z + 1.0 )%2) - 1
                         self.target_set = True
-                    
-                    #If angle is correct, stop turn and walk new side
-                    if  (msg.angular.z < self.target + 0.05) and (msg.angular.z > self.target - 0.05):
+
+                    if (msg.angular.z < self.target + 0.05) and (msg.angular.z > self.target - 0.05):
                         self.turn = False
                         self.target_set = False
                         #Record new completed side
