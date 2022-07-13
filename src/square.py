@@ -65,7 +65,7 @@ class Move:
                 #Check if the side needs to be walked
                 if self.turn == False:
                     #Check distance walked
-                    dist = sqrt((msg.position.x - self.sidestart.position.x)**2 + (msg.position.y - self.sidestart.position.y)**2)
+                    dist = np.sqrt((msg.position.x - self.sidestart.position.x)**2 + (msg.position.y - self.sidestart.position.y)**2)
                     
                     #Check if total distance has been walked and now need to turn
                     if dist >= self.side:
