@@ -45,7 +45,7 @@ class lemniscate:
         check = raw_input("Start lemniscate test? y or n")
         if str(check) == "y":
             self.odom_sub = rospy.Subscriber('/spot/odom', Pose, odom_callback, queue_size=1)
-            self.move_pub = rospy.Publisher('/spot/cmd_vel', Twist, queue_size=1)
+            self.move_pub = rospy.Publisher('/cmd_vel', Twist, queue_size=1)
 
     
     def odom_callback(self, msg):
