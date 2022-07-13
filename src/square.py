@@ -47,7 +47,7 @@ class Move:
         #Start Publisher and Subscriber to /cmd_vel and /odom
         check = raw_input("Start square test? y or n")
         if str(check) == "y":
-            self.odom_sub = rospy.Subscriber('/spot/odometry', Odometry, self.odom_callback, queue_size=1)
+            self.odom_sub = rospy.Subscriber('/spot/odometry', Pose, self.odom_callback, queue_size=1)
             self.move_pub = rospy.Publisher('/cmd_vel', Twist, queue_size=1)
         
         
